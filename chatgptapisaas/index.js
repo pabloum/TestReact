@@ -12,9 +12,16 @@ const port = 3001;
 
 const configuration = new Configuration({
     // organization: "org-116GdI3bivetsydNnhzCYRLs",
-    apiKey: "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",
+    apiKey: "asdfasdfsad",
 });
 const openai = new OpenAIApi(configuration);
+
+
+const models = openai.listModels().then(result => {
+    console.log(result.data)
+    return result.data;
+});
+
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -24,20 +31,17 @@ app.post('/', async (req, res) => {
     const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: message,
-        max_tokens: 100,
-        temperature: 0,
-    })
-    .catch(error => {
-        console.log("error occured" + error);
+        max_tokens: 1500,
+        temperature: 0.2,
     });
 
-    console.log(response.data);
-
     if (response.data.choices) {
+        console.log(response.data);
         res.json({
             message: response.data.choices[0].text
         })
     } else {
+        console.log(response);
         res.json({
             message: "Something went wrong"
         })
